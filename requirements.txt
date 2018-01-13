@@ -6,3 +6,4 @@ scipy
 pillow
 pandas
 h5py
+matplotlib
