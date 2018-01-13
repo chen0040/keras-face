@@ -70,7 +70,7 @@ from keras_face.library.siamese import SiameseFaceNet
 
 def main():
     fnet = SiameseFaceNet()
-    fnet.vgg16_include_top_for_training = True # default is False
+    fnet.vgg16_include_top = True # default is False
 
     model_dir_path = '../training/models'
     image_dir_path = "../training/data/images"

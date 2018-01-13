@@ -39,7 +39,7 @@ class SiameseFaceNet(object):
 
     def __init__(self):
         self.model = None
-        self.vgg16_include_top_for_training = False
+        self.vgg16_include_top = False
 
         self.labels = None
         self.config = None
@@ -65,7 +65,7 @@ class SiameseFaceNet(object):
         self.labels = self.config['labels']
         self.input_shape = self.config['input_shape']
         self.threshold = self.config['threshold']
-        self.vgg16_include_top_for_training = self.config['vgg16_include_top_for_training']
+        self.vgg16_include_top = self.config['vgg16_include_top']
 
         self.vgg16_model = self.create_vgg16_model()
         self.model = self.create_network(input_shape=self.input_shape)
@@ -147,7 +147,7 @@ class SiameseFaceNet(object):
         return model_dir_path + os.path.sep + SiameseFaceNet.model_name + '-architecture.h5'
 
     def create_vgg16_model(self):
-        vgg16_model = VGG16(include_top=self.vgg16_include_top_for_training, weights='imagenet')
+        vgg16_model = VGG16(include_top=self.vgg16_include_top, weights='imagenet')
         vgg16_model.compile(optimizer=SGD(), loss='categorical_crossentropy', metrics=['accuracy'])
         return vgg16_model
 
@@ -159,7 +159,7 @@ class SiameseFaceNet(object):
         if epochs is None:
             epochs = 20
         if vgg16_include_top is not None:
-            self.vgg16_include_top_for_training = vgg16_include_top
+            self.vgg16_include_top = vgg16_include_top
 
         for name, feature in database.items():
             self.input_shape = feature[0].shape
@@ -181,7 +181,7 @@ class SiameseFaceNet(object):
         self.config['input_shape'] = self.input_shape
         self.config['labels'] = self.labels
         self.config['threshold'] = self.threshold
-        self.config['vgg16_include_top_for_training'] = self.vgg16_include_top_for_training
+        self.config['vgg16_include_top'] = self.vgg16_include_top
 
         config_file_path = SiameseFaceNet.get_config_path(model_dir_path=model_dir_path)
         np.save(config_file_path, self.config)
@@ -254,8 +254,8 @@ class SiameseFaceNet(object):
         identity -- string, the name prediction for the person on image_path
         """
 
-        if threshold is None:
-            threshold = 0.7
+        if threshold is not None:
+            self.threshold = threshold
 
         ## Step 1: Compute the target "encoding" for the image. Use img_to_encoding() see example above. ## (≈ 1 line)
         encoding = self.img_to_encoding(image_path)
@@ -275,12 +275,14 @@ class SiameseFaceNet(object):
             input_pairs = np.array(input_pairs)
             dist = np.average(self.model.predict([input_pairs[:, 0], input_pairs[:, 1]]), axis=-1)[0]
 
+            print("--for " + str(name) + ", the distance is " + str(dist))
+
             # If this distance is less than the min_dist, then set min_dist to dist, and identity to name. (≈ 3 lines)
             if dist < min_dist:
                 min_dist = dist
                 identity = name
 
-        if min_dist > threshold:
+        if min_dist > self.threshold:
             print("Not in the database.")
         else:
             print("it's " + str(identity) + ", the distance is " + str(min_dist))
@@ -290,7 +292,7 @@ class SiameseFaceNet(object):
 
 def main():
     fnet = SiameseFaceNet()
-    fnet.vgg16_include_top_for_training = True
+    fnet.vgg16_include_top = True
 
     model_dir_path = '../training/models'
     image_dir_path = "../training/data/images"
@@ -309,7 +311,7 @@ def main():
     database["benoit"] = [fnet.img_to_encoding(image_dir_path + "/benoit.jpg")]
     database["arnaud"] = [fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")]
 
-    # fnet.fit(database=database, model_dir_path=model_dir_path)
+    fnet.fit(database=database, model_dir_path=model_dir_path)
 
     fnet.load_model(model_dir_path)
     fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
