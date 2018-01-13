@@ -134,10 +134,13 @@ if __name__ == '__main__':
     main()
 ```
 
-# Note
+# Todo
+
 
 For VGG16 + Siamese, the training was not well-done as there are currently very limited number of sample images used for
-training (only 12 images for 12 persons). Ideally, need to train using 100,000 images for 10,000 persons
+training (only 12 images for 12 persons). Ideally, need to train using 100,000 images for 10,000 persons. Will need
+to add in larger dataset for the training
 
+# Note
 For DeepFace (namely [keras_face/library/face_net.py](keras_face/library/face_net.py)), some utility classes 
 and weights are taken from [https://github.com/shahariarrabby/deeplearning.ai](https://github.com/shahariarrabby/deeplearning.ai)

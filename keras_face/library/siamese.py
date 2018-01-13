@@ -215,9 +215,7 @@ class SiameseFaceNet(object):
         for i in range(len(x)):
             input_pairs.append([encoding, x[i]])
         input_pairs = np.array(input_pairs)
-        print(input_pairs.shape)
         dist = np.average(self.model.predict([input_pairs[:, 0], input_pairs[:, 1]]), axis=-1)[0]
-        print(dist)
 
         # Step 3: Open the door if dist < threshold, else don't open (≈ 3 lines)
         if dist < self.threshold:
@@ -256,10 +254,13 @@ class SiameseFaceNet(object):
         identity = None
 
         # Loop over the database dictionary's names and encodings.
-        for (name, db_enc) in database.items():
+        for (name, x) in database.items():
 
-            # Compute L2 distance between the target "encoding" and the current "emb" from the database. (≈ 1 line)
-            dist = np.linalg.norm(db_enc[0] - encoding)
+            input_pairs = []
+            for i in range(len(x)):
+                input_pairs.append([encoding, x[i]])
+            input_pairs = np.array(input_pairs)
+            dist = np.average(self.model.predict([input_pairs[:, 0], input_pairs[:, 1]]), axis=-1)[0]
 
             # If this distance is less than the min_dist, then set min_dist to dist, and identity to name. (≈ 3 lines)
             if dist < min_dist:
@@ -294,12 +295,12 @@ def main():
     database["benoit"] = [fnet.img_to_encoding(image_dir_path + "/benoit.jpg")]
     database["arnaud"] = [fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")]
 
-    fnet.fit(database=database, model_dir_path=model_dir_path)
+    # fnet.fit(database=database, model_dir_path=model_dir_path)
 
     fnet.load_model(model_dir_path)
-    fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
-    fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
-    # fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
+    # fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
+    # fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
+    fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
 
 
 if __name__ == '__main__':
