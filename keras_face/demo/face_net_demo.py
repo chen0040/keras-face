@@ -22,9 +22,15 @@ def main():
     database["benoit"] = fnet.img_to_encoding(image_dir_path + "/benoit.jpg")
     database["arnaud"] = fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")
 
-    fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
-    fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
-    fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
+    dist, is_valid = fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
+    print('camera_0.jpg is' + (' ' if is_valid else ' not ') + 'yournes')
+    dist, is_valid = fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
+    print('camera_0.jpg is' + (' ' if is_valid else ' not ') + 'yournes')
+    dist, identity = fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
+    if identity is None:
+        print('camera_0.jpg is not found in database')
+    else:
+        print('camera_0.jpg is ' + str(identity))
 
 
 if __name__ == '__main__':

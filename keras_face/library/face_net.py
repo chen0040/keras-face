@@ -1,21 +1,6 @@
-from keras.models import Sequential
-from keras.layers import Conv2D, ZeroPadding2D, Activation, Input, concatenate
-from keras.models import Model
-from keras.layers.normalization import BatchNormalization
-from keras.layers.pooling import MaxPooling2D, AveragePooling2D
-from keras.layers.merge import Concatenate
-from keras.layers.core import Lambda, Flatten, Dense
-from keras.initializers import glorot_uniform
-from keras.engine.topology import Layer
 from keras import backend as K
 
 K.set_image_data_format('channels_first')
-import cv2
-import os
-import numpy as np
-from numpy import genfromtxt
-import pandas as pd
-import tensorflow as tf
 from keras_face.library.fr_utils import *
 from keras_face.library.inception_blocks_v2 import *
 
@@ -147,7 +132,7 @@ class FaceNet(object):
                 min_dist = dist
                 identity = name
 
-        if min_dist < threshold:
+        if min_dist > threshold:
             print("Not in the database.")
         else:
             print("it's " + str(identity) + ", the distance is " + str(min_dist))
