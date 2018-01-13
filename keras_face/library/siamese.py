@@ -39,18 +39,19 @@ class SiameseFaceNet(object):
 
     def __init__(self):
         self.model = None
-        self.vgg16_include_top = False
+        self.vgg16_include_top_for_training = False
 
-        vgg16_model = VGG16(include_top=self.vgg16_include_top, weights='imagenet')
-        vgg16_model.compile(optimizer=SGD(), loss='categorical_crossentropy', metrics=['accuracy'])
-        self.vgg16_model = vgg16_model
         self.labels = None
         self.config = None
         self.input_shape = None
         self.threshold = 0.5
+        self.vgg16_model = None
 
     def img_to_encoding(self, image_path):
         print('encoding: ', image_path)
+        if self.vgg16_model is None:
+            self.vgg16_model = self.create_vgg16_model()
+
         image = cv2.imread(image_path, 1)
         img = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
         input = img_to_array(img)
@@ -64,7 +65,9 @@ class SiameseFaceNet(object):
         self.labels = self.config['labels']
         self.input_shape = self.config['input_shape']
         self.threshold = self.config['threshold']
+        self.vgg16_include_top_for_training = self.config['vgg16_include_top_for_training']
 
+        self.vgg16_model = self.create_vgg16_model()
         self.model = self.create_network(input_shape=self.input_shape)
         weight_file_path = SiameseFaceNet.get_weight_path(model_dir_path)
         self.model.load_weights(weight_file_path)
@@ -143,17 +146,26 @@ class SiameseFaceNet(object):
     def get_architecture_path(model_dir_path):
         return model_dir_path + os.path.sep + SiameseFaceNet.model_name + '-architecture.h5'
 
-    def fit(self, database, model_dir_path, epochs=None, batch_size=None, threshold=None):
+    def create_vgg16_model(self):
+        vgg16_model = VGG16(include_top=self.vgg16_include_top_for_training, weights='imagenet')
+        vgg16_model.compile(optimizer=SGD(), loss='categorical_crossentropy', metrics=['accuracy'])
+        return vgg16_model
+
+    def fit(self, database, model_dir_path, epochs=None, batch_size=None, threshold=None, vgg16_include_top=None):
         if threshold is not None:
             self.threshold = threshold
         if batch_size is None:
             batch_size = 128
         if epochs is None:
             epochs = 20
+        if vgg16_include_top is not None:
+            self.vgg16_include_top_for_training = vgg16_include_top
 
         for name, feature in database.items():
             self.input_shape = feature[0].shape
             break
+
+        self.vgg16_model = self.create_vgg16_model()
 
         self.model = self.create_network(input_shape=self.input_shape)
         architecture_file_path = self.get_architecture_path(model_dir_path)
@@ -169,6 +181,7 @@ class SiameseFaceNet(object):
         self.config['input_shape'] = self.input_shape
         self.config['labels'] = self.labels
         self.config['threshold'] = self.threshold
+        self.config['vgg16_include_top_for_training'] = self.vgg16_include_top_for_training
 
         config_file_path = SiameseFaceNet.get_config_path(model_dir_path=model_dir_path)
         np.save(config_file_path, self.config)
@@ -178,7 +191,7 @@ class SiameseFaceNet(object):
 
         t_x, t_y = self.create_pairs(database, names)
 
-        print('dataset pairs: ', t_x.shape)
+        print('data set pairs: ', t_x.shape)
 
         self.model.fit([t_x[:, 0], t_x[:, 1]], t_y,
                        batch_size=batch_size,
@@ -277,6 +290,7 @@ class SiameseFaceNet(object):
 
 def main():
     fnet = SiameseFaceNet()
+    fnet.vgg16_include_top_for_training = True
 
     model_dir_path = '../training/models'
     image_dir_path = "../training/data/images"
@@ -298,8 +312,8 @@ def main():
     # fnet.fit(database=database, model_dir_path=model_dir_path)
 
     fnet.load_model(model_dir_path)
-    # fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
-    # fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
+    fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
+    fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
     fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
 
 

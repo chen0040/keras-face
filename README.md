@@ -2,15 +2,13 @@
 
 face verification and recognition using Keras
 
-The project contains two implementations which can be founds in 
-[keras_face/library/face_net.py](keras_face/library/face_net.py) and 
-[keras_face/library/siamese.py](keras_face/library/siamese.py)
+The project contains two implementations: [DeepFace](keras_face/library/face_net.py) and 
+[VGG16 + Siamese](keras_face/library/siamese.py)
 
-[keras_face/library/face_net.py](keras_face/library/face_net.py) contains the deep face implementation tought in the
+* DeepFace: [keras_face/library/face_net.py](keras_face/library/face_net.py) contains the deep face implementation tought in the
 coursea course deeplearning.ai
-
-[keras_face/library/siamese.py](keras_face/library/siamese.py) is my own implementation of siamese network + VGG16 + 
-binary crossentropy loss function (image similarity function)
+* VGG16 + Siamese: [keras_face/library/siamese.py](keras_face/library/siamese.py) is my own implementation of siamese network + VGG16 + 
+contrastive loss function (image similarity function)
 
 # Usage
 
@@ -72,6 +70,7 @@ from keras_face.library.siamese import SiameseFaceNet
 
 def main():
     fnet = SiameseFaceNet()
+    fnet.vgg16_include_top_for_training = True # default is False
 
     model_dir_path = '../training/models'
     image_dir_path = "../training/data/images"
@@ -144,3 +143,4 @@ to add in larger dataset for the training
 # Note
 For DeepFace (namely [keras_face/library/face_net.py](keras_face/library/face_net.py)), some utility classes 
 and weights are taken from [https://github.com/shahariarrabby/deeplearning.ai](https://github.com/shahariarrabby/deeplearning.ai)
+, also it contains only the prediction part
