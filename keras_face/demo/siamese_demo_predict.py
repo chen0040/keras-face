@@ -6,6 +6,7 @@ def main():
 
     model_dir_path = '../training/models'
     image_dir_path = "../training/data/images"
+    fnet.load_model(model_dir_path)
 
     database = dict()
     database["danielle"] = [fnet.img_to_encoding(image_dir_path + "/danielle.png")]
@@ -21,7 +22,6 @@ def main():
     database["benoit"] = [fnet.img_to_encoding(image_dir_path + "/benoit.jpg")]
     database["arnaud"] = [fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")]
 
-    fnet.load_model(model_dir_path)
     fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
     fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
     fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
