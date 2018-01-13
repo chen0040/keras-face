@@ -1,6 +1,16 @@
 # keras-face
 
-face detection, verification and recognition using Keras
+face verification and recognition using Keras
+
+The project contains two implementations which can be founds in 
+[keras_face/library/face_net.py](keras_face/library/face_net.py) and 
+[keras_face/library/siamese.py](keras_face/library/siamese.py)
+
+[keras_face/library/face_net.py](keras_face/library/face_net.py) contains the deep face implementation tought in the
+coursea course deeplearning.ai
+
+[keras_face/library/siamese.py](keras_face/library/siamese.py) is my own implementation of siamese network + VGG16 + 
+binary crossentropy loss function (image similarity function)
 
 # Usage
 

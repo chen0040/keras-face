@@ -7,3 +7,4 @@ pillow
 pandas
 h5py
 matplotlib
+scikit-learn
