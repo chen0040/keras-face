@@ -14,6 +14,8 @@ binary crossentropy loss function (image similarity function)
 
 # Usage
 
+### DeepFace 
+
 Below shows the sample codes which verifies whether a particular camera image is a person in an image database or
 whether a particular camera image is which person in the image database (or not at all)
 
@@ -60,6 +62,82 @@ if __name__ == '__main__':
     main()
 ```
 
+### VGG16 + Siamese
+
+Below shows how to train the V166+Siamese network:
+
+```python
+from keras_face.library.siamese import SiameseFaceNet
+
+
+def main():
+    fnet = SiameseFaceNet()
+
+    model_dir_path = '../training/models'
+    image_dir_path = "../training/data/images"
+
+    database = dict()
+    database["danielle"] = [fnet.img_to_encoding(image_dir_path + "/danielle.png")]
+    database["younes"] = [fnet.img_to_encoding(image_dir_path + "/younes.jpg")]
+    database["tian"] = [fnet.img_to_encoding(image_dir_path + "/tian.jpg")]
+    database["andrew"] = [fnet.img_to_encoding(image_dir_path + "/andrew.jpg")]
+    database["kian"] = [fnet.img_to_encoding(image_dir_path + "/kian.jpg")]
+    database["dan"] = [fnet.img_to_encoding(image_dir_path + "/dan.jpg")]
+    database["sebastiano"] = [fnet.img_to_encoding(image_dir_path + "/sebastiano.jpg")]
+    database["bertrand"] = [fnet.img_to_encoding(image_dir_path + "/bertrand.jpg")]
+    database["kevin"] = [fnet.img_to_encoding(image_dir_path + "/kevin.jpg")]
+    database["felix"] = [fnet.img_to_encoding(image_dir_path + "/felix.jpg")]
+    database["benoit"] = [fnet.img_to_encoding(image_dir_path + "/benoit.jpg")]
+    database["arnaud"] = [fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")]
+
+    fnet.fit(database=database, model_dir_path=model_dir_path)
+
+if __name__ == '__main__':
+    main()
+
+```
+
+Below shows the sample codes which verifies whether a particular camera image is a person in an image database or
+whether a particular camera image is which person in the image database (or not at all)
+
+```python
+from keras_face.library.siamese import SiameseFaceNet
+
+
+def main():
+    fnet = SiameseFaceNet()
+
+    model_dir_path = '../training/models'
+    image_dir_path = "../training/data/images"
+
+    database = dict()
+    database["danielle"] = [fnet.img_to_encoding(image_dir_path + "/danielle.png")]
+    database["younes"] = [fnet.img_to_encoding(image_dir_path + "/younes.jpg")]
+    database["tian"] = [fnet.img_to_encoding(image_dir_path + "/tian.jpg")]
+    database["andrew"] = [fnet.img_to_encoding(image_dir_path + "/andrew.jpg")]
+    database["kian"] = [fnet.img_to_encoding(image_dir_path + "/kian.jpg")]
+    database["dan"] = [fnet.img_to_encoding(image_dir_path + "/dan.jpg")]
+    database["sebastiano"] = [fnet.img_to_encoding(image_dir_path + "/sebastiano.jpg")]
+    database["bertrand"] = [fnet.img_to_encoding(image_dir_path + "/bertrand.jpg")]
+    database["kevin"] = [fnet.img_to_encoding(image_dir_path + "/kevin.jpg")]
+    database["felix"] = [fnet.img_to_encoding(image_dir_path + "/felix.jpg")]
+    database["benoit"] = [fnet.img_to_encoding(image_dir_path + "/benoit.jpg")]
+    database["arnaud"] = [fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")]
+
+    fnet.load_model(model_dir_path)
+    fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
+    fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
+    fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
+
+
+if __name__ == '__main__':
+    main()
+```
+
 # Note
 
-some utility classes and weights are taken from [https://github.com/shahariarrabby/deeplearning.ai](https://github.com/shahariarrabby/deeplearning.ai)
+For VGG16 + Siamese, the training was not well-done as there are currently very limited number of sample images used for
+training (only 12 images for 12 persons). Ideally, need to train using 100,000 images for 10,000 persons
+
+For DeepFace (namely [keras_face/library/face_net.py](keras_face/library/face_net.py)), some utility classes 
+and weights are taken from [https://github.com/shahariarrabby/deeplearning.ai](https://github.com/shahariarrabby/deeplearning.ai)

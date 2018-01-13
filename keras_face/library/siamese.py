@@ -294,7 +294,7 @@ def main():
     database["benoit"] = [fnet.img_to_encoding(image_dir_path + "/benoit.jpg")]
     database["arnaud"] = [fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")]
 
-    # fnet.fit(database=database, model_dir_path=model_dir_path)
+    fnet.fit(database=database, model_dir_path=model_dir_path)
 
     fnet.load_model(model_dir_path)
     fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
