@@ -9,6 +9,8 @@ __pycache__/
 .idea/
 *.iml
 
+Thumbs.db
+
 # Distribution / packaging
 .Python
 env/

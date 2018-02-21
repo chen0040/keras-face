@@ -3,10 +3,10 @@ from keras_face.library.siamese import SiameseFaceNet
 
 def main():
     fnet = SiameseFaceNet()
+    fnet.vgg16_include_top = True
 
-    model_dir_path = '../training/models'
-    image_dir_path = "../training/data/images"
-    fnet.load_model(model_dir_path)
+    model_dir_path = './models'
+    image_dir_path = "./data/images"
 
     database = dict()
     database["danielle"] = [fnet.img_to_encoding(image_dir_path + "/danielle.png")]
@@ -22,10 +22,7 @@ def main():
     database["benoit"] = [fnet.img_to_encoding(image_dir_path + "/benoit.jpg")]
     database["arnaud"] = [fnet.img_to_encoding(image_dir_path + "/arnaud.jpg")]
 
-    fnet.verify(image_dir_path + "/camera_0.jpg", "younes", database)
-    fnet.verify(image_dir_path + "/camera_2.jpg", "kian", database)
-    fnet.who_is_it(image_dir_path + "/camera_0.jpg", database)
-    fnet.who_is_it(image_dir_path + "/younes.jpg", database)
+    fnet.fit(database=database, model_dir_path=model_dir_path)
 
 
 if __name__ == '__main__':

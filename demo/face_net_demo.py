@@ -2,13 +2,13 @@ from keras_face.library.face_net import FaceNet
 
 
 def main():
-    model_dir_path = '../training/models'
-    image_dir_path = "../training/data/images"
+    model_dir_path = './models'
+    image_dir_path = "./data/images"
 
     fnet = FaceNet()
     fnet.load_model(model_dir_path)
 
-    database = {}
+    database = dict()
     database["danielle"] = fnet.img_to_encoding(image_dir_path + "/danielle.png")
     database["younes"] = fnet.img_to_encoding(image_dir_path + "/younes.jpg")
     database["tian"] = fnet.img_to_encoding(image_dir_path + "/tian.jpg")

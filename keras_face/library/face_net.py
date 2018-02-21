@@ -143,8 +143,8 @@ class FaceNet(object):
 def main():
     triplet_loss_test()
 
-    model_dir_path = '../training/models'
-    image_dir_path = "../training/data/images"
+    model_dir_path = './models'
+    image_dir_path = "./data/images"
 
     fnet = FaceNet()
     fnet.load_model(model_dir_path)

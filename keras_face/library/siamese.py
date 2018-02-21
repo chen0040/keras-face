@@ -294,8 +294,8 @@ def main():
     fnet = SiameseFaceNet()
     fnet.vgg16_include_top = True
 
-    model_dir_path = '../training/models'
-    image_dir_path = "../training/data/images"
+    model_dir_path = './models'
+    image_dir_path = "./data/images"
 
     database = dict()
     database["danielle"] = [fnet.img_to_encoding(image_dir_path + "/danielle.png")]

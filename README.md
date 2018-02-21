@@ -14,7 +14,7 @@ contrastive loss function (image similarity function)
 
 ### DeepFace 
 
-Below shows the sample codes which verifies whether a particular camera image is a person in an image database or
+Below shows the [sample codes](demo/face_net_demo.py) which verifies whether a particular camera image is a person in an image database or
 whether a particular camera image is which person in the image database (or not at all)
 
 ```python
@@ -22,8 +22,8 @@ from keras_face.library.face_net import FaceNet
 
 
 def main():
-    model_dir_path = '../training/models'
-    image_dir_path = "../training/data/images"
+    model_dir_path = './models'
+    image_dir_path = "./data/images"
 
     fnet = FaceNet()
     fnet.load_model(model_dir_path)
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 ### VGG16 + Siamese
 
-Below shows how to train the V166+Siamese network:
+Below shows [sample codes](demo/siamese_demo_train.py) how to train the V166+Siamese network:
 
 ```python
 from keras_face.library.siamese import SiameseFaceNet
@@ -72,8 +72,8 @@ def main():
     fnet = SiameseFaceNet()
     fnet.vgg16_include_top = True # default is False
 
-    model_dir_path = '../training/models'
-    image_dir_path = "../training/data/images"
+    model_dir_path = './models'
+    image_dir_path = "./data/images"
 
     database = dict()
     database["danielle"] = [fnet.img_to_encoding(image_dir_path + "/danielle.png")]
@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
 ```
 
-Below shows the sample codes which verifies whether a particular camera image is a person in an image database or
+Below shows the [sample codes](demo/siamese_demo_train.py) which verifies whether a particular camera image is a person in an image database or
 whether a particular camera image is which person in the image database (or not at all)
 
 ```python
@@ -106,8 +106,8 @@ from keras_face.library.siamese import SiameseFaceNet
 def main():
     fnet = SiameseFaceNet()
 
-    model_dir_path = '../training/models'
-    image_dir_path = "../training/data/images"
+    model_dir_path = './models'
+    image_dir_path = "./data/images"
     fnet.load_model(model_dir_path)
 
     database = dict()
@@ -132,6 +132,14 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+
+# Configure to run on GPU on Windows
+
+* Step 1: Change tensorflow to tensorflow-gpu in requirements.txt and install tensorflow-gpu
+* Step 2: Download and install the [CUDA® Toolkit 9.0](https://developer.nvidia.com/cuda-90-download-archive) (Please note that
+currently CUDA® Toolkit 9.1 is not yet supported by tensorflow, therefore you should download CUDA® Toolkit 9.0)
+* Step 3: Download and unzip the [cuDNN 7.4 for CUDA@ Toolkit 9.0](https://developer.nvidia.com/cudnn) and add the
+bin folder of the unzipped directory to the $PATH of your Windows environment 
 
 # Todo
 
