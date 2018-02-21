@@ -29,6 +29,10 @@ def main():
         frontal_face_model_file_path,
         '../../demo/data/opencv-images/test1.jpg')
 
+    detect_face_from_img_path(
+        frontal_face_model_file_path,
+        '../../demo/data/opencv-images/test4.jpg')
+
 
 if __name__ == '__main__':
     main()
